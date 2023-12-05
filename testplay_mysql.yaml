@@ -1,0 +1,21 @@
+- name: Install MySQL on target2
+  hosts: target2
+  remote_user: remoteadmin
+  tasks:
+    - name: Install MySQL Server
+      apt:
+        name: mysql-server
+        state: present
+        update_cache: yes
+
+    - name: Enable UFW and allow SSH and MySQL
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      with_items:
+        - 22
+        - 3306
+
+    - name: Reload UFW
+      command: ufw reload

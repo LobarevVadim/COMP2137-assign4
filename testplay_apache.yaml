@@ -1,0 +1,21 @@
+- name: Install Apache on target1
+  hosts: target1
+  remote_user: remoteadmin
+  tasks:
+    - name: Install Apache2
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Enable UFW and allow SSH and HTTP
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      with_items:
+        - 22
+        - 80
+
+    - name: Reload UFW
+      command: ufw reload
